@@ -20,7 +20,6 @@ jobs:
           echo [Setup] > setup.iss
           echo AppName=PQCVPN_DD >> setup.iss
           echo AppVersion=1.0 >> setup.iss
-          echo AppPublisher=PQCVPN_DD >> setup.iss
           echo DefaultDirName={autopf}\PQCVPN_DD >> setup.iss
           echo DefaultGroupName=PQCVPN_DD >> setup.iss
           echo OutputBaseFilename=PQCVPN_DD_Setup >> setup.iss
@@ -28,19 +27,15 @@ jobs:
           echo Compression=lzma >> setup.iss
           echo SolidCompression=yes >> setup.iss
           echo WizardStyle=modern >> setup.iss
-          echo. >> setup.iss
           echo [Languages] >> setup.iss
           echo Name: "english"; MessagesFile: "compiler:Default.isl" >> setup.iss
-          echo. >> setup.iss
           echo [Files] >> setup.iss
           echo Source: "wireguard-installer.exe"; DestDir: "{app}"; DestName: "PQCVPN_DD.exe"; Flags: ignoreversion >> setup.iss
-          echo. >> setup.iss
           echo [Icons] >> setup.iss
           echo Name: "{autodesktop}\PQCVPN_DD"; Filename: "{app}\PQCVPN_DD.exe" >> setup.iss
           echo Name: "{group}\PQCVPN_DD"; Filename: "{app}\PQCVPN_DD.exe" >> setup.iss
-          echo. >> setup.iss
           echo [Run] >> setup.iss
-          echo Filename: "{app}\PQCVPN_DD.exe"; Description: "PQCVPN_DD launch karo"; Flags: nowait postinstall skipifsilent >> setup.iss
+          echo Filename: "{app}\PQCVPN_DD.exe"; Flags: nowait postinstall skipifsilent >> setup.iss
 
       - name: Build EXE
         shell: cmd
@@ -52,4 +47,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PQCVPN_DD_Windows_Setup
-          path: Output/PQCVPN_DD_Setup.exe
+          path: Output\PQCVPN_DD_Setup.exe
