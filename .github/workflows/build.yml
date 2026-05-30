@@ -19,11 +19,39 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Generate Keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore pqcvpn.keystore \
+            -alias pqcvpn \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=PQCVPN_DD, OU=PQCVPN, O=PQCVPN_DD, L=IN, S=IN, C=IN" \
+            -storepass pqcvpn123 \
+            -keypass pqcvpn123
+
       - name: Build APK
         run: ./gradlew assembleRelease
+
+      - name: Sign APK
+        run: |
+          jarsigner -verbose \
+            -sigalg SHA256withRSA \
+            -digestalg SHA-256 \
+            -keystore pqcvpn.keystore \
+            -storepass pqcvpn123 \
+            -keypass pqcvpn123 \
+            ui/build/outputs/apk/release/ui-release-unsigned.apk \
+            pqcvpn
+          
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -1)/zipalign \
+            -v 4 \
+            ui/build/outputs/apk/release/ui-release-unsigned.apk \
+            PQCVPN_DD.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PQCVPN_DD
-          path: ui/build/outputs/apk/release/*.apk
+          path: PQCVPN_DD.apk
