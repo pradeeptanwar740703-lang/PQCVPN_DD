@@ -25,6 +25,9 @@ jobs:
             mkdir -p ui/src/main/res/mipmap-$size
             cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher.png
             cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher_round.png
+            cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher_foreground.png
+            rm -f ui/src/main/res/mipmap-$size/ic_launcher.xml
+            rm -f ui/src/main/res/mipmap-$size/ic_launcher_round.xml
           done
 
       - name: Build APK
