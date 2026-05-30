@@ -19,6 +19,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set PQCVPN_DD Logo
+        run: |
+          for size in hdpi mdpi xhdpi xxhdpi xxxhdpi; do
+            mkdir -p ui/src/main/res/mipmap-$size
+            cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher.png
+            cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher_round.png
+          done
+
       - name: Generate Keystore
         run: |
           keytool -genkeypair -v \
@@ -44,7 +52,6 @@ jobs:
             -keypass pqcvpn123 \
             ui/build/outputs/apk/release/ui-release-unsigned.apk \
             pqcvpn
-          
           $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -1)/zipalign \
             -v 4 \
             ui/build/outputs/apk/release/ui-release-unsigned.apk \
