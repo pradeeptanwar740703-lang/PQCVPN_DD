@@ -1,0 +1,54 @@
+name: Build PQCVPN_DD Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Download WireGuard installer
+        run: |
+          Invoke-WebRequest -Uri "https://download.wireguard.com/windows-client/wireguard-installer.exe" -OutFile "wireguard-installer.exe"
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+
+      - name: Create PQCVPN_DD installer script
+        run: |
+          @"
+          [Setup]
+          AppName=PQCVPN_DD
+          AppVersion=1.0
+          AppPublisher=PQCVPN_DD
+          DefaultDirName={autopf}\PQCVPN_DD
+          DefaultGroupName=PQCVPN_DD
+          OutputBaseFilename=PQCVPN_DD_Setup
+          Compression=lzma
+          SolidCompression=yes
+          WizardStyle=modern
+
+          [Languages]
+          Name: "english"; MessagesFile: "compiler:Default.isl"
+
+          [Files]
+          Source: "wireguard-installer.exe"; DestDir: "{app}"; Flags: ignoreversion
+
+          [Icons]
+          Name: "{autodesktop}\PQCVPN_DD"; Filename: "{app}\wireguard-installer.exe"
+          Name: "{group}\PQCVPN_DD"; Filename: "{app}\wireguard-installer.exe"
+
+          [Run]
+          Filename: "{app}\wireguard-installer.exe"; Description: "Install PQCVPN_DD"; Flags: nowait postinstall skipifsilent
+          "@ | Out-File -FilePath "setup.iss" -Encoding ASCII
+
+      - name: Build EXE
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: PQCVPN_DD_Windows
+          path: Output\PQCVPN_DD_Setup.exe
