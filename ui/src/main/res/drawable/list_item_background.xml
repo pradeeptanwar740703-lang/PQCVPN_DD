@@ -1,21 +1,5 @@
-- name: Set PQCVPN_DD Logo
-        run: |
-          pip install pillow --break-system-packages
-          python3 - << 'EOF'
-          from PIL import Image
-          import os
-          sizes = {
-            'hdpi': 72, 'mdpi': 48, 'xhdpi': 96,
-            'xxhdpi': 144, 'xxxhdpi': 192
-          }
-          for folder, size in sizes.items():
-            path = f"ui/src/main/res/mipmap-{folder}"
-            os.makedirs(path, exist_ok=True)
-            img = Image.open("pqc_dd.png").resize((size, size))
-            img.save(f"{path}/ic_launcher.png")
-            img.save(f"{path}/ic_launcher_round.png")
-            img.save(f"{path}/ic_launcher_foreground.png")
-          EOF
-          find ui/src/main/res -name "*.xml" | xargs grep -l "adaptive-icon" | xargs rm -f
-          find ui/src/main/res -name "ic_launcher_background*" -delete
-          find ui/src/main/res -name "ic_launcher_foreground.xml" -delete
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item android:drawable="?attr/selectableItemBackground" />
+</ripple>
