@@ -17,12 +17,18 @@ jobs:
           distribution: 'temurin'
       - name: Set PQCVPN_DD Logo
         run: |
-          for size in hdpi mdpi xhdpi xxhdpi xxxhdpi; do
-            mkdir -p ui/src/main/res/mipmap-$size
-            cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher.png
-            cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher_round.png
-          done
-          find ui/src/main/res/mipmap-hdpi ui/src/main/res/mipmap-mdpi ui/src/main/res/mipmap-xhdpi ui/src/main/res/mipmap-xxhdpi ui/src/main/res/mipmap-xxxhdpi -name "*.xml" -delete 2>/dev/null || true
+          ls -la pqc_dd.png || echo "FILE NOT FOUND"
+          if [ -f pqc_dd.png ]; then
+            for size in hdpi mdpi xhdpi xxhdpi xxxhdpi; do
+              mkdir -p ui/src/main/res/mipmap-$size
+              cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher.png
+              cp pqc_dd.png ui/src/main/res/mipmap-$size/ic_launcher_round.png
+              echo "Copied to mipmap-$size"
+            done
+          else
+            echo "ERROR: pqc_dd.png not found!"
+            ls -la
+          fi
       - name: Build APK
         run: ./gradlew assembleRelease
       - name: Sign APK
